@@ -1,68 +1,41 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 main(){
   runApp(ComponenteInicial());
 }
 
-class ComponenteInicial extends StatefulWidget{
+class ComponenteInicial extends StatelessWidget{
 
-  @override
-
-  State<ComponenteInicial> createState() => _ComponenteInicialState();
-}
-
-class _ComponenteInicialState extends State<ComponenteInicial>{
-   var contador= 0;
-
-   final perguntas= [
-    "cor favo?",
-    "hob favo?",
-    "animal favo?",
-    "comida favo?"
-    ];
-   
   void eventoBotao(){
-    setState((){
-      contador: contador++ ;
-    });
-    print(contador);
-
+    print("Clicou");
   }
-Widget build(BuildContext context){
-  return MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(
-        title: Text("Perguntas e respostas"),
-      ),
-      body: Column(
-        children: [
-          Text(perguntas[contador]),
-          ElevatedButton(
-            onPressed: eventoBotao,
-           child: Text("Enviar")
-           ),
-           ElevatedButton(
-            onPressed: (){
-              print ("outra função");
-            },
-           child: Text("Cancelar")),
+
+  Widget build(BuildContext context){
+    return MaterialApp(
+      home: Scaffold(
+        appBar:AppBar(
+          title: Text("Perguntas e Respostas"),
+        ), 
+        body: Column(
+          children: [
             ElevatedButton(
-              onPressed: () => print ("função arrow"),
-           child: Text("Salvar")),
-           Column(
-            children: [
-              Text("Aprendendo"),
-              Text("Programação"),
-              Text("Flutter"),
-            ],
-           )
-        ],
-       )
-       
-    )
-  );
-}
-
-
+              onPressed: eventoBotao,
+              child: Text("Cancelar"),
+            ),
+            ElevatedButton(
+              onPressed:eventoBotao,
+              child: Text("Salvar"),
+            ),
+            Column(
+              children: [
+                Text("Aprendendo"),
+                Text("Programação"),
+                Text("Flutter"),
+              ],
+            ),
+          ],
+        ), 
+      ),
+    );
+  }
 }
