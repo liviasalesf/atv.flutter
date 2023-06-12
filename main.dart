@@ -1,103 +1,73 @@
 import 'package:flutter/material.dart';
+import './questao.dart';
+import './resposta.dart';
 
-void main() {
-  runApp(QuestionnaireApp());
+main() {
+  runApp(AulaComponentes());
 }
 
-class QuestionnaireApp extends StatefulWidget {
+class AulaComponentes extends StatefulWidget{
   @override
-  _QuestionnaireAppState createState() => _QuestionnaireAppState();
+  State<AulaComponentes> createState() => _AulaComponentesState();
 }
 
-class _QuestionnaireAppState extends State<QuestionnaireApp> {
-  final List<Map<String, dynamic>> questions = [
+class _AulaComponentesState extends State<AulaComponentes> {
+
+  var perguntaAtual = 0;
+  var cor = Colors.white;
+
+  final List<Map<String, Object>> questionario = [
     {
-      'pergunta': 'Qual sua cor favorita?',
-      'alternativas': ['branco', 'preto', 'azul', 'rosa'],
-      'resposta': '',
+      "pergunta": "Qual a sua cor favorita?",
+      "respostas": ["Amarelo", "Preto", "Branco", "Vermelho"]
     },
     {
-      'pergunta': 'Quem descobriu o Brasil?',
-      'alternativas': ['Pedro Álvares Cabral', 'Cristóvão Colombo', 'Fernão de Magalhães', 'Bartolomeu Dias'],
-      'resposta': '',
+      "pergunta": "Qual é seu animal favorito?",
+      "respostas": ["Cachorro", "Gato", "Tartaruga"]
     },
     {
-      'pergunta': 'Quantos planetas existem no sistema solar?',
-      'alternativas': ['7', '8', '9', '10'],
-      'resposta': '',
+      "pergunta": "Qual sua linguagem favorita?",
+      "respostas": ["Python", "Java", "HTML"]
+    },
+    {
+      "pergunta": "Qual seu humor de hoje?",
+      "respostas": ["Bem", "Mal", "Médio"]
     },
   ];
 
-  int currentQuestionIndex = 0;
+  bool get temPergunta {
+    return perguntaAtual < questionario.length;
+  }
+  
+  void acao() {
+    setState(() {
+      perguntaAtual++;
+    });
+    print(perguntaAtual);
+  }
 
-  @override
   Widget build(BuildContext context) {
+
+    List<Widget> respostas = [];
+
+    if (temPergunta) {
+      for (var resposta in questionario[perguntaAtual]["respostas"] as List<String>) {
+        respostas.add(
+          Resposta(resposta, acao),
+        );
+      }
+    }
+    
     return MaterialApp(
-      title: 'Questionário',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Questionário'),
+          title: temPergunta ? Questao(questionario[perguntaAtual]["pergunta"].toString()) : Questao("Terminou"),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                questions[currentQuestionIndex]['pergunta']!,
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 16.0),
-              Column(
-                children: List<Widget>.generate(
-                  questions[currentQuestionIndex]['alternativas'].length,
-                  (index) => RadioListTile(
-                    title: Text(questions[currentQuestionIndex]['alternativas'][index]),
-                    value: questions[currentQuestionIndex]['alternativas'][index],
-                    groupValue: questions[currentQuestionIndex]['resposta'],
-                    onChanged: (value) {
-                      setState(() {
-                        questions[currentQuestionIndex]['resposta'] = value;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    if (currentQuestionIndex < questions.length - 1) {
-                      currentQuestionIndex++;
-                    } else {
-                      // Questionário concluído
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text('Questionário concluído'),
-                            content: Text('O questionário foi respondido.'),
-                            actions: [
-                              TextButton(
-                                child: Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-                  });
-                },
-                child: Text(
-                  currentQuestionIndex < questions.length - 1 ? 'Enviar' : 'Finalizar questionário',
-                ),
-              ),
-            ],
-          ),
-        ),
+        body: temPergunta ? Column(
+          children: [
+            ...respostas,
+          ],
+        ) : Text("Resultado"),
       ),
     );
   }
